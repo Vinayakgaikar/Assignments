@@ -1,0 +1,173 @@
+Question 2
+
+A Given a binary tree, the task is to flip the binary tree towards the right direction that is clockwise. See the below examples to see the transformation.
+
+In the flip operation, the leftmost node becomes the root of the flipped tree and its parent becomes its right child and the right sibling becomes its left child and the same should be done for all left most nodes recursively.
+
+SOLUTION:
+
+class Node {
+    int data;
+    Node left, right;
+
+    public Node(int item) {
+        data = item;
+        left = right = null;
+    }
+}
+
+public class BinaryTreeFlip {
+    Node root;
+
+    // Function to flip the binary tree
+    Node flipBinaryTree(Node node) {
+        // Base case: If the node is null or a leaf node, return the node
+        if (node == null || isLeafNode(node)) {
+            return node;
+        }
+
+        // Recursively flip the left and right subtrees
+        Node flippedLeft = flipBinaryTree(node.left);
+        Node flippedRight = flipBinaryTree(node.right);
+
+        // Update the pointers to flip the current node
+        node.left = flippedRight;
+        node.right = null;
+        Node current = flippedLeft;
+        while (current.right != null) {
+            Node temp = current.right;
+            current.right = current.left;
+            current.left = temp;
+            current = current.right;
+        }
+        current.right = current.left;
+        current.left = null;
+
+        // Return the flipped node
+        return node;
+    }
+
+    // Helper function to check if a node is a leaf node
+    boolean isLeafNode(Node node) {
+        return node.left == null && node.right == null;
+    }
+
+Question 3
+
+Given a binary tree, print all its root-to-leaf paths without using recursion. For example, consider the following Binary Tree.
+
+Input:
+
+        6
+     /    \
+    3      5
+  /   \     \
+ 2     5     4
+     /   \
+    7     4
+
+Output:
+
+There are 4 leaves, hence 4 root to leaf paths -
+  6->3->2
+  6->3->5->7
+  6->3->5->4
+  6->5>4
+
+SOLUTION:
+
+public List<String> binaryTreePaths(TreeNode root) {
+    List<String> res = new ArrayList<>();
+    if (root == null) {
+        return res;
+    }
+    Queue<TreeNode> queue = new LinkedList<>();
+    Queue<String> path = new LinkedList<>();
+    path.offer(root.val + "");
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+        TreeNode cur = queue.poll();
+        String item = path.poll();
+        if (cur.left == null && cur.right == null) {
+            res.add(item);
+        }
+        if (cur.left != null) {
+            queue.offer(cur.left);
+            path.offer(item + "->" + cur.left.val + "");
+        }
+        if (cur.right != null) {
+            queue.offer(cur.right);
+            path.offer(item + "->" + cur.right.val + "");
+        }
+    }
+    return res;
+}
+
+Question 4
+
+Given Preorder, Inorder and Postorder traversals of some tree. Write a program to check if they all are of the same tree.
+
+**Examples:**
+
+Input : 
+
+        Inorder -> 4 2 5 1 3
+        Preorder -> 1 2 4 5 3
+        Postorder -> 4 5 2 3 1
+Output : 
+
+Yes
+Explanation : 
+
+All of the above three traversals are of
+the same tree 
+
+                           1
+                         /   \
+                        2     3
+                      /   \
+                     4     5
+
+Input : 
+
+        Inorder -> 4 2 5 1 3
+        Preorder -> 1 5 4 2 3
+        Postorder -> 4 1 2 3 5
+Output : 
+
+No
+
+SOLUTION:
+
+public boolean checktree(int preorder[], int s,
+                             int inorder[], int s1,
+                             int postorder[], int s2,
+                             int len)
+    {
+        if (len == 0)
+            return true;
+
+        if (len == 1)
+            return ((preorder[s] == inorder[s1])
+                    && (inorder[s1] == postorder[s2]));
+ 
+        int idx = -1;
+        for (int i = s1; i < s1 + len; ++i)
+            if (inorder[i] == preorder[s]) {
+                idx = i;
+                break;
+            }
+ 
+        if (idx == -1)
+            return false;
+        idx = idx - s1;
+ 
+        boolean ret1 = checktree(preorder, s + 1, inorder,
+                                 s1, postorder, s2, idx);
+ 
+        boolean ret2 = checktree(
+            preorder, s + idx + 1, inorder, s1 + idx + 1,
+            postorder, s2 + idx, len - idx - 1);
+
+        return (ret1 && ret2);
+    }

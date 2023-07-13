@@ -1,0 +1,324 @@
+Question 1
+
+Given two strings s and t, *determine if they are isomorphic*.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+**Example 1:**
+
+**Input:** s = "egg", t = "add"
+
+**Output:** true
+
+SOLUTION:
+
+public boolean isIsomorphic(String s, String t) 
+    {
+        HashMap<Character,Character> map = new HashMap<>();
+        
+        for(int i=0; i<s.length();i++)
+        {
+            char ch = s.charAt(i);
+            
+            if(map.containsKey(ch))
+            {
+                if(map.get(ch) != t.charAt(i))
+                    return false;
+            }
+            
+            else
+            {
+                if(map.containsValue(t.charAt(i)) == true)
+                    return false;
+                
+                else
+                    map.put(ch , t.charAt(i));
+            }
+        }
+        return true;
+    }
+
+Question 2
+
+Given a string num which represents an integer, return true *if* num *is a **strobogrammatic number***.
+
+A **strobogrammatic number** is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+**Example 1:**
+
+**Input:** num = "69"
+
+**Output:**
+
+true
+
+SOLUTION:
+
+ public ArrayList<String> numdef(int n, int length)
+  {
+    ArrayList<String> result = new ArrayList<String>();
+    if (n == 0)
+      return result;
+    if (n == 1) {
+      result.add("1");
+      result.add("0");
+      result.add("8");
+      return result;
+    }
+ 
+    ArrayList<String> middles = numdef(n - 2, length);
+ 
+    for (String middle : middles) {
+      if (n != length)
+        result.add("0" + middle + "0");
+ 
+      result.add("8" + middle + "8");
+      result.add("1" + middle + "1");
+      result.add("9" + middle + "6");
+      result.add("6" + middle + "9");
+    }
+    return result;
+  }
+
+Question 3
+
+Given two non-negative integers, num1 and num2 represented as string, return *the sum of* num1 *and* num2 *as a string*.
+
+You must solve the problem without using any built-in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.
+
+**Example 1:**
+
+**Input:** num1 = "11", num2 = "123"
+
+**Output:**
+
+"134"
+
+SOLUTION:
+
+public String addStrings(String num1, String num2) 
+    {
+        int i = num1.length() -1;
+        int j= num2.length() -1;
+        
+        int carry =0;
+        
+        StringBuilder sb = new StringBuilder();
+        
+        while(i >= 0 || j >= 0 || carry > 0)
+        {
+            int n1 =0, n2=0;
+            
+            if(i >= 0)
+            {
+                n1 = num1.charAt(i) - '0';
+                i--;
+            }
+            
+            if(j >= 0)
+            {
+                n2 = num2.charAt(j) - '0';
+                j--;
+            }
+            
+            int num = (n1 + n2 + carry) % 10;
+            
+            if( (n1 + n2 + carry) >= 10)
+                carry = 1;
+            
+            else
+                carry =0;
+            
+            sb.append(num);
+        }
+        
+        return sb.reverse().toString();
+    }
+
+Question 4
+
+Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+
+**Example 1:**
+
+**Input:** s = "Let's take LeetCode contest"
+
+**Output:** "s'teL ekat edoCteeL tsetnoc"
+
+SOLUTION:
+
+  public String reverseWords(String s) 
+    {
+        String result = "";
+        String temp = "";
+        
+        for(int i=0; i<s.length();i++)
+        {
+            char ch = s.charAt(i);
+            
+            if(ch != ' ')
+                temp = ch + temp;
+            
+            if(ch == ' ')
+            {
+                result = result + " " + temp;
+                temp = "";
+            }
+        }
+        return result + " " + temp;
+}
+
+Question 5
+
+Given a string s and an integer k, reverse the first k characters for every 2k characters counting from the start of the string.
+
+If there are fewer than k characters left, reverse all of them. If there are less than 2k but greater than or equal to k characters, then reverse the first k characters and leave the other as original.
+
+**Example 1:**
+
+**Input:** s = "abcdefg", k = 2
+
+**Output:**
+
+"bacdfeg"
+
+SOLUTION:
+
+public String reverseStr(String s, int k) {
+        char[] str = s.toCharArray();
+        int n = str.length;
+        for(int i = 0 ; i <= n-1; i += 2*k){
+            if(i+k-1 <= n-1){
+                reverseK(i,i+k-1,str);
+            }else{
+				//for fewer than k characters left (edge case)
+                reverseK(i,n-1,str);
+            }
+        }
+        String ans = new String(str);
+        return ans;
+    }
+    public void reverseK(int i, int j, char[] str){
+        while(i < j){
+            char temp = str[i];
+            str[i] = str[j];
+            str[j] = temp;
+            i++;
+            j--;
+        }
+    }
+
+Question 6
+
+Given two strings s and goal, return true *if and only if* s *can become* goal *after some number of **shifts** on* s.
+
+A **shift** on s consists of moving the leftmost character of s to the rightmost position.
+
+- For example, if s = "abcde", then it will be "bcdea" after one shift.
+
+**Example 1:**
+
+**Input:** s = "abcde", goal = "cdeab"
+
+**Output:**
+
+true
+
+SOLUTION:
+
+public boolean rotateString(String s, String goal) 
+    {
+        if(s.length() != goal.length())
+            return false;
+        
+        String str = s+s;
+        
+        return str.contains(goal);
+        
+    }
+
+Question 7
+
+Given two strings s and t, return true *if they are equal when both are typed into empty text editors*. '#' means a backspace character.
+
+Note that after backspacing an empty text, the text will continue empty.
+
+**Example 1:**
+
+**Input:** s = "ab#c", t = "ad#c"
+
+**Output:** true
+
+**Explanation:**
+
+Both s and t become "ac".
+
+SOLUTION:
+
+public boolean backspaceCompare(String s, String t) 
+    {
+        String s1 = helper(s);
+        String s2 = helper(t);
+
+        return (s1.equals(s2));
+    }
+
+    private String helper(String s)
+    {
+        Stack<Character> stack = new Stack<>();
+
+        for(int i=0; i<s.length();i++)
+        {
+            char ch = s.charAt(i);
+
+            if(ch == '#')
+            {
+                if(!stack.isEmpty())
+                stack.pop();
+                continue;
+            }
+            stack.push(ch);
+        }
+        String res = "";
+
+        while(!stack.isEmpty())
+        res = res + stack.pop();
+
+        return res;
+    }
+
+Question 8
+
+You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point. Check if these points make a straight line in the XY plane.
+
+**Example 1:**
+
+**Input:** coordinates = [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]
+
+**Output:** true
+
+SOLUTION:
+
+public boolean checkStraightLine(int[][] coordinates) 
+    {
+        int x1 = coordinates[0][0];
+        int x2 = coordinates[1][0];
+        int y1 = coordinates[0][1];
+        int y2 = coordinates[1][1];
+        
+        int b = x1-x2;
+        int a = y2-y1;
+        
+        int c = a*x1 + b*y1;
+        
+        for(int i=2; i<coordinates.length;i++)
+        {
+            int m = a*coordinates[i][0] + b*coordinates[i][1];
+            
+            if(m != c)
+                return false;
+        }
+        return true;
+    }

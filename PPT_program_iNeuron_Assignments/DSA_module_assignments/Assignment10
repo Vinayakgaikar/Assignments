@@ -1,0 +1,288 @@
+Question 1
+
+Given an integer `n`, return *`true` if it is a power of three. Otherwise, return `false`*.
+
+An integer `n` is a power of three, if there exists an integer `x` such that `n == 3x`.
+
+**Example 1:**
+
+```
+Input: n = 27
+Output: true
+Explanation: 27 = 33
+```
+
+**Example 2:**
+
+```
+Input: n = 0
+Output: false
+Explanation: There is no x where 3x = 0.
+
+```
+
+**Example 3:**
+
+```
+Input: n = -1
+Output: false
+Explanation: There is no x where 3x = (-1).
+```
+
+SOLUTION:
+
+public static boolean isPowerOfThree(int n) {
+        if (n == 1) {
+            return true;
+        } else if (n <= 0 || n % 3 != 0) {
+            return false;
+        } else {
+            return isPowerOfThree(n / 3);
+        }
+    }
+
+Question 2
+
+You have a list `arr` of all integers in the range `[1, n]` sorted in a strictly increasing order. Apply the following algorithm on `arr`:
+
+- Starting from left to right, remove the first number and every other number afterward until you reach the end of the list.
+- Repeat the previous step again, but this time from right to left, remove the rightmost number and every other number from the remaining numbers.
+- Keep repeating the steps again, alternating left to right and right to left, until a single number remains.
+
+Given the integer `n`, return *the last number that remains in* `arr`.
+
+**Example 1:**
+
+```
+Input: n = 9
+Output: 6
+Explanation:
+arr = [1, 2,3, 4,5, 6,7, 8,9]
+arr = [2,4, 6,8]
+arr = [2, 6]
+arr = [6]
+
+```
+
+SOLUTION:
+
+public static int lastRemaining(int n) {
+        return lastRemainingHelper(n, true);
+    }
+
+    public static int lastRemainingHelper(int n, boolean isLeftToRight) {
+        if (n == 1) {
+            return 1;
+        }
+
+        if (isLeftToRight) {
+            // If the direction is left to right, the next call starts from the second element
+            // and the remaining numbers are reduced by half
+            return 2 * lastRemainingHelper(n / 2, false);
+        } else {
+            // If the direction is right to left, the next call starts from the first element
+            // and the remaining numbers are reduced by half
+            if (n % 2 == 1) {
+                // If n is odd, the rightmost element will be removed
+                return 2 * lastRemainingHelper(n / 2, true);
+            } else {
+                // If n is even, the rightmost element will be retained
+                return 2 * lastRemainingHelper(n / 2, true) - 1;
+            }
+        }
+    }
+
+Question 3
+
+****Given a set represented as a string, write a recursive code to print all subsets of it. The subsets can be printed in any order.
+
+**Example 1:**
+
+Input :  set = “abc”
+
+Output : { “”, “a”, “b”, “c”, “ab”, “ac”, “bc”, “abc”}
+
+**Example 2:**
+
+Input : set = “abcd”
+
+Output : { “”, “a” ,”ab” ,”abc” ,”abcd”, “abd” ,”ac” ,”acd”, “ad” ,”b”, “bc” ,”bcd” ,”bd” ,”c” ,”cd” ,”d” }
+
+SOLUTION:
+
+public static void printSubsets(String set) {
+        printSubsetsHelper(set, "", 0);
+    }
+
+    public static void printSubsetsHelper(String set, String currentSubset, int index) {
+        if (index == set.length()) {
+            System.out.println(currentSubset);
+            return;
+        }
+
+        // Include the current character
+        printSubsetsHelper(set, currentSubset + set.charAt(index), index + 1);
+
+        // Exclude the current character
+        printSubsetsHelper(set, currentSubset, index + 1);
+    }
+
+Question 4
+
+Given a string calculate length of the string using recursion.
+
+Input : str = "abcd"
+Output :4
+
+Input : str = "GEEKSFORGEEKS"
+Output :13
+
+SOLUTION:
+
+public static int calculateLength(String str) {
+        if (str.equals("")) {
+            return 0;
+        } else {
+            return 1 + calculateLength(str.substring(1));
+        }
+    }
+
+Question 5
+
+We are given a string S, we need to find count of all contiguous substrings starting and ending with same character.
+
+**Examples :**
+
+Input  : S = "abcab"
+Output : 7
+There are 15 substrings of "abcab"
+a, ab, abc, abca, abcab, b, bc, bca
+bcab, c, ca, cab, a, ab, b
+Out of the above substrings, there
+are 7 substrings : a, abca, b, bcab,
+c, a and b.
+
+Input  : S = "aba"
+Output : 4
+The substrings are a, b, a and aba
+
+SOLUTION:
+
+public static int countSubstrings(String str) {
+        return countSubstringsHelper(str, 0, str.length() - 1);
+    }
+
+    public static int countSubstringsHelper(String str, int start, int end) {
+        if (start == end) {
+            return 1;
+        } else if (start > end) {
+            return 0;
+        } else {
+            int count = countSubstringsHelper(str, start + 1, end) + countSubstringsHelper(str, start, end - 1);
+            if (str.charAt(start) == str.charAt(end)) {
+                count++;
+            }
+            return count;
+        }
+    }
+
+Question 6
+
+The [tower of Hanoi] is a famous puzzle where we have three rods and **N** disks. The objective of the puzzle is to move the entire stack to another rod. You are given the number of discs **N**. Initially, these discs are in the rod 1. You need to print all the steps of discs movement so that all the discs reach the 3rd rod. Also, you need to find the total moves.**Note:** The discs are arranged such that the **top disc is numbered 1** and the **bottom-most disc is numbered N**. Also, all the discs have **different sizes** and a bigger disc **cannot** be put on the top of a smaller disc. Refer the provided link to get a better clarity about the puzzle.
+
+**Example 1:**
+
+Input:
+N = 2
+Output:
+move disk 1 from rod 1 to rod 2
+move disk 2 from rod 1 to rod 3
+move disk 1 from rod 2 to rod 3
+3
+Explanation:For N=2 , steps will be
+as follows in the example and total
+3 steps will be taken.
+
+SOLUTION:
+
+public void towerOfHanoi(int n, char from_rod,
+                             char to_rod, char aux_rod)
+    {
+        if (n == 0) {
+            return;
+        }
+        towerOfHanoi(n - 1, from_rod, aux_rod, to_rod);
+        System.out.println("Move disk " + n + " from rod "
+                           + from_rod + " to rod "
+                           + to_rod);
+        towerOfHanoi(n - 1, aux_rod, to_rod, from_rod);
+    }
+Question 7
+
+Given a string **str**, the task is to print all the permutations of **str**. A **permutation** is an arrangement of all or part of a set of objects, with regard to the order of the arrangement. For instance, the words ‘bat’ and ‘tab’ represents two distinct permutation (or arrangements) of a similar three letter word.
+
+**Examples:**
+
+> Input: str = “cd”
+> 
+> 
+> **Output:** cd dc
+> 
+> **Input:** str = “abb”
+> 
+> **Output:** abb abb bab bba bab bba
+> 
+SOLUTION:
+
+public static void permute(String str, int l, int r) {
+        if (l == r) {
+            System.out.println(str);
+        } else {
+            for (int i = l; i <= r; i++) {
+                str = swap(str, l, i);
+                permute(str, l + 1, r);
+                str = swap(str, l, i); // backtrack
+            }
+        }
+    }
+
+    public static String swap(String str, int i, int j) {
+        char[] charArray = str.toCharArray();
+        char temp = charArray[i];
+        charArray[i] = charArray[j];
+        charArray[j] = temp;
+        return String.valueOf(charArray);
+    }
+
+Question 8
+
+Given a string, count total number of consonants in it. A consonant is an English alphabet character that is not vowel (a, e, i, o and u). Examples of constants are b, c, d, f, and g.
+
+**Examples :**
+
+Input : abc de
+Output : 3
+There are three consonants b, c and d.
+
+Input : geeksforgeeks portal
+Output : 12
+
+SOLUTION:
+
+public static int countConsonants(String str) {
+        if (str.equals("")) {
+            return 0;
+        } else {
+            char firstChar = str.charAt(0);
+            if (isConsonant(firstChar)) {
+                return 1 + countConsonants(str.substring(1));
+            } else {
+                return countConsonants(str.substring(1));
+            }
+        }
+    }
+
+    public static boolean isConsonant(char c) {
+        c = Character.toLowerCase(c);
+        return (c >= 'b' && c <= 'z' && c != 'a' && c != 'e' && c != 'i' && c != 'o' && c != 'u');
+    }

@@ -1,0 +1,398 @@
+Question 1
+
+Given a non-negative integer `x`, return *the square root of* `x` *rounded down to the nearest integer*. The returned integer should be **non-negative** as well.
+
+You **must not use** any built-in exponent function or operator.
+
+- For example, do not use `pow(x, 0.5)` in c++ or `x ** 0.5` in python.
+
+**Example 1:**
+
+Input: x = 4
+Output: 2
+Explanation: The square root of 4 is 2, so we return 2.
+
+SOLUTION:
+
+public int mySqrt(int x)
+    {
+        if(x<=1)
+            return x;
+        
+        int start = 1;
+        int end = x/2;
+        
+        while(start < end)
+        {
+            int mid = 1 + start + (end-start)/2;
+            
+            int d = x/mid;
+            
+            if(d == mid)
+                return mid;
+            
+             if(d>mid)
+                 start = mid;
+            else
+                end = mid-1;
+        }
+        return start;
+    }
+
+Question 2
+
+A peak element is an element that is strictly greater than its neighbors.
+
+Given a **0-indexed** integer array `nums`, find a peak element, and return its index. If the array contains multiple peaks, return the index to **any of the peaks**.
+
+You may imagine that `nums[-1] = nums[n] = -∞`. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.
+
+You must write an algorithm that runs in `O(log n)` time.
+
+**Example 1:**
+
+Input: nums = [1,2,3,1]
+Output: 2
+Explanation: 3 is a peak element and your function should return the index number 2.
+
+SOLUTION:
+
+public int findPeakElement(int[] nums) 
+    {
+        int start =0;
+        int end = nums.length -1;
+        
+        while(start < end)
+        {
+            int mid = start + (end - start )/2;
+            
+            if(nums[mid] > nums[mid+1])
+                end = mid;
+            else 
+                start = mid+1;
+        }
+        return start;
+    }
+
+Question 3
+
+****
+
+Given an array `nums` containing `n` distinct numbers in the range `[0, n]`, return *the only number in the range that is missing from the array.*
+
+Example 1:
+
+Input: nums = [3,0,1]
+Output: 2
+Explanation: n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+
+SOLUTION:
+
+public int missingNumber(int[] nums) {
+        Arrays.sort(nums);
+        int lo = 0, hi = nums.length - 1;
+        while (lo <= hi) {
+            int mid = lo + (hi - lo) / 2;
+            if (nums[mid] == mid) {
+                lo = mid + 1;
+            } else {
+                hi = mid - 1;
+            }
+        }
+
+        return lo;
+    }
+
+Question 4
+
+Given an array of integers `nums` containing `n + 1` integers where each integer is in the range `[1, n]` inclusive.
+
+There is only **one repeated number** in `nums`, return *this repeated number*.
+
+You must solve the problem **without** modifying the array `nums` and uses only constant extra space.
+
+**Example 1:**
+
+Input: nums = [1,3,4,2,2]
+Output: 2
+
+SOLUTION:
+
+public int function(int[] nums)
+{
+   int low = 0,high = nums.length - 1,cnt;
+        while(low <= high){
+            int mid = low + (high - low)/2;
+            cnt = 0;
+            for(int num:nums){
+                if(num <= mid){
+                    cnt++;
+                }
+            }
+            if(cnt <= mid){
+                low = mid + 1;
+            }else{
+                high = mid - 1;
+            }
+        }
+    return low;
+ }
+
+Question 5
+
+Given two integer arrays `nums1` and `nums2`, return *an array of their intersection*. Each element in the result must be **unique** and you may return the result in **any order**.
+
+**Example 1:**
+
+```
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+
+```
+
+**Example 2:**
+
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+Explanation: [4,9] is also accepted.
+
+SOLUTION:
+
+public class ArrayIntersection {
+    public static int[] intersection(int[] nums1, int[] nums2) {
+        Arrays.sort(nums1); // Sort nums1 array
+        Arrays.sort(nums2); // Sort nums2 array
+
+        List<Integer> intersectionList = new ArrayList<>(); // List to store intersection elements
+
+        int i = 0;
+        int j = 0;
+
+        while (i < nums1.length && j < nums2.length) {
+            if (nums1[i] == nums2[j]) {
+                // Found an intersection element
+                if (intersectionList.isEmpty() || nums1[i] != intersectionList.get(intersectionList.size() - 1)) {
+                    // Add only unique elements to the intersection list
+                    intersectionList.add(nums1[i]);
+                }
+                i++;
+                j++;
+            } else if (nums1[i] < nums2[j]) {
+                i++; // Increment i if nums1[i] is smaller
+            } else {
+                j++; // Increment j if nums2[j] is smaller
+            }
+        }
+
+        // Convert the list to an array
+        int[] intersectionArray = new int[intersectionList.size()];
+        for (int k = 0; k < intersectionList.size(); k++) {
+            intersectionArray[k] = intersectionList.get(k);
+        }
+
+        return intersectionArray;
+    }
+
+Question 6
+
+Suppose an array of length `n` sorted in ascending order is **rotated** between `1` and `n` times. For example, the array `nums = [0,1,2,4,5,6,7]` might become:
+
+- `[4,5,6,7,0,1,2]` if it was rotated `4` times.
+- `[0,1,2,4,5,6,7]` if it was rotated `7` times.
+
+Notice that **rotating** an array `[a[0], a[1], a[2], ..., a[n-1]]` 1 time results in the array `[a[n-1], a[0], a[1], a[2], ..., a[n-2]]`.
+
+Given the sorted rotated array `nums` of **unique** elements, return *the minimum element of this array*.
+
+You must write an algorithm that runs in `O(log n) time.`
+
+**Example 1:**
+
+```
+Input: nums = [3,4,5,1,2]
+Output: 1
+Explanation: The original array was [1,2,3,4,5] rotated 3 times.
+
+```
+
+SOLUTION:
+
+public int findMin(int[] nums) 
+    {
+       int start =0;
+       int end = nums.length-1;
+        
+        if(nums[start] <= nums[end])
+            return nums[start];
+        
+        while(start <= end)
+        {
+            int mid = start + (end - start) /2;
+            
+            if(nums[mid] < nums[mid+1] && nums[mid-1] > nums[mid])
+                return nums[mid];
+            
+            if(nums[mid] > nums[mid+1])
+                return nums[mid+1];
+            
+            if(nums[start] <= nums[mid])
+                start = mid+1;
+            
+            else
+                end = mid-1;
+        }
+        return -1;
+        
+    }
+
+Question 7
+
+Given an array of integers `nums` sorted in non-decreasing order, find the starting and ending position of a given `target` value.
+
+If `target` is not found in the array, return `[-1, -1]`.
+
+You must write an algorithm with `O(log n)` runtime complexity.
+
+**Example 1:**
+
+```
+Input: nums = [5,7,7,8,8,10], target = 8
+Output: [3,4]
+
+```
+
+**Example 2:**
+
+```
+Input: nums = [5,7,7,8,8,10], target = 6
+Output: [-1,-1]
+
+```
+
+SOLUTION:
+
+public int[] searchRange(int[] nums, int target) 
+    {
+        int[] ans = {-1,-1};
+        
+        ans[0] = find_first(nums , target);
+        
+        if(ans[0] == -1)
+            return ans;
+        
+        ans[1] = find_last(nums , target);
+        
+        return ans;
+    }
+    
+    private int find_first(int[] nums , int target)
+    {
+        int start =0;
+        int end = nums.length-1;
+        int res =-1;
+        
+        while(start <= end)
+        {
+            int mid = start + (end - start) / 2 ;
+            
+            if(nums[mid] >= target)
+                end = mid -1;
+            
+            else
+                start = mid +1;
+            
+            if(nums[mid] == target)
+                res = mid;
+        }
+        return res;
+    }
+    
+    private int find_last(int[] nums , int target)
+    {
+        int start =0;
+        int end = nums.length-1;
+        int res =-1;
+        
+        while(start <= end)
+        {
+            int mid = start + (end - start) / 2;
+                      
+            if(nums[mid] <= target)
+                start = mid +1;
+            
+            else
+                end = mid -1;
+            
+            if(nums[mid] == target)
+                res = mid;
+        }
+        return res;
+    }
+
+Question 8
+
+Given two integer arrays `nums1` and `nums2`, return *an array of their intersection*. Each element in the result must appear as many times as it shows in both arrays and you may return the result in **any order**.
+
+**Example 1:**
+
+```
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2,2]
+
+```
+
+**Example 2:**
+
+```
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [4,9]
+Explanation: [9,4] is also accepted.
+```
+
+SOLUTION:
+
+public int[] intersect(int[] nums1, int[] nums2) {
+	if(nums2.length < nums1.length){
+		return intersect(nums2, nums1);
+	}
+
+	Arrays.sort(nums1);
+	Arrays.sort(nums2);
+
+	List<Integer> result = new ArrayList<>();
+	int leftIndex = 0;
+	for(int num: nums1){
+		int index = binarySearch(nums2, num, leftIndex);
+
+		if(index != -1){
+			result.add(num);
+			leftIndex = index + 1;
+		}
+	}
+
+	return result.stream().mapToInt(Integer::intValue).toArray();
+}
+
+private int binarySearch(int[] nums, int target, int left){
+	int right = nums.length - 1;
+	int index = -1;
+
+	while(left <= right){
+		int middle = left + (right - left) / 2;
+
+		if(nums[middle] == target){
+			index = middle;
+
+			right = middle - 1;
+		} else if(nums[middle] > target){
+			right = middle - 1;
+		} else {
+			left = middle + 1;
+		}
+	}
+
+	return index;
+}
+
+
+

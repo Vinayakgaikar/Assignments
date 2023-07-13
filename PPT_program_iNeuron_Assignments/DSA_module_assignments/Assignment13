@@ -1,0 +1,340 @@
+Question 1
+
+Given two linked list of the same size, the task is to create a new linked list using those linked lists. The condition is that the greater node among both linked list will be added to the new linked list.
+
+**Examples:**
+
+Input: list1 = 5->2->3->8
+list2 = 1->7->4->5
+Output: New list = 5->7->4->8
+
+Input:list1 = 2->8->9->3
+list2 = 5->3->6->4
+Output: New list = 5->8->9->4
+
+SOLUTION:
+
+class Node {
+    int data;
+    Node next;
+
+    Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    Node head;
+
+    void insert(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+        } else {
+            Node current = head;
+            while (current.next != null) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+    }
+
+    static LinkedList mergeLinkedLists(LinkedList list1, LinkedList list2) {
+        if (list1.head == null || list2.head == null) {
+            return null;
+        }
+
+        LinkedList result = new LinkedList();
+        Node node1 = list1.head;
+        Node node2 = list2.head;
+
+        while (node1 != null && node2 != null) {
+            if (node1.data > node2.data) {
+                result.insert(node1.data);
+                node1 = node1.next;
+            } else {
+                result.insert(node2.data);
+                node2 = node2.next;
+            }
+        }
+
+        // Add remaining nodes from list1, if any
+        while (node1 != null) {
+            result.insert(node1.data);
+            node1 = node1.next;
+        }
+
+        // Add remaining nodes from list2, if any
+        while (node2 != null) {
+            result.insert(node2.data);
+            node2 = node2.next;
+        }
+
+        return result;
+    }
+
+Question 2
+
+Write a function that takes a list sorted in non-decreasing order and deletes any duplicate nodes from the list. The list should only be traversed once.
+
+For example if the linked list is 11->11->11->21->43->43->60 then removeDuplicates() should convert the list to 11->21->43->60.
+
+**Example 1:**
+
+```
+Input:
+LinkedList: 
+11->11->11->21->43->43->60
+Output:
+11->21->43->60
+```
+SOLUTION:
+
+public ListNode deleteDuplicates(ListNode head) 
+    {
+       if(head== null)
+           return null;
+        
+        ListNode current_node = head ; 
+        
+        while(current_node != null)
+        {
+            while(current_node.next != null && current_node.val == current_node.next.val)
+                current_node.next = current_node.next.next;
+            
+            current_node = current_node.next;
+      }
+        
+        return head;
+    }
+
+Question 3
+
+Given a linked list of size **N**. The task is to reverse every **k** nodes (where k is an input to the function) in the linked list. If the number of nodes is not a multiple of *k* then left-out nodes, in the end, should be considered as a group and must be reversed (See Example 2 for clarification).
+
+**Example 1:**
+
+```
+Input:
+LinkedList: 1->2->2->4->5->6->7->8
+K = 4
+Output:4 2 2 1 8 7 6 5
+Explanation:
+The first 4 elements 1,2,2,4 are reversed first
+and then the next 4 elements 5,6,7,8. Hence, the
+resultant linked list is 4->2->2->1->8->7->6->5.
+
+```
+
+SOLUTION:
+
+
+
+Question 4
+
+Given a linked list, write a function to reverse every alternate k nodes (where k is an input to the function) in an efficient way. Give the complexity of your algorithm.
+
+**Example:**
+
+Inputs:   1->2->3->4->5->6->7->8->9->NULL and k = 3
+Output:   3->2->1->4->5->6->9->8->7->NULL.
+
+SOLUTION:
+
+public ListNode reverseKGroup(ListNode head, int k)
+    {
+        if(k == 1 || head == null)
+            return head;
+        
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        
+        ListNode current = dummy, pre = dummy , nex = dummy;
+        int count =0;
+        
+        while(current.next != null)
+        {
+            current = current.next;
+            count++;
+        }
+        
+        while(count >= k)
+        {
+            current = pre.next;
+            nex = current.next;
+            
+            for(int i=1; i<k; i++)
+            {
+                current.next = nex.next;
+                nex.next = pre.next;
+                pre.next = nex;
+                nex = current.next;
+            }
+            pre = current;
+            count = count - k;
+        }
+        
+        return dummy.next;
+    }
+
+Question 5
+
+Given a linked list and a key to be deleted. Delete last occurrence of key from linked. The list may have duplicates.
+
+**Examples**:
+
+Input:   1->2->3->5->2->10, key = 2
+Output:  1->2->3->5->10
+
+SOLUTION:
+
+public void deleteLastOccurrence(int key) {
+        if (head == null)
+            return;
+
+        Node lastOccurrence = null;
+        Node current = head;
+
+        while (current != null) {
+            if (current.data == key) {
+                lastOccurrence = current;
+            }
+            current = current.next;
+        }
+
+        if (lastOccurrence == null)
+            return;
+
+        if (lastOccurrence == head) {
+            head = head.next;
+        } else {
+            current = head;
+            while (current.next != lastOccurrence) {
+                current = current.next;
+            }
+            current.next = lastOccurrence.next;
+        }
+    }
+
+Question 6
+
+Given two sorted linked lists consisting of **N** and **M** nodes respectively. The task is to merge both of the lists (in place) and return the head of the merged list.
+
+**Examples:**
+
+Input: a: 5->10->15, b: 2->3->20
+
+Output: 2->3->5->10->15->20
+
+Input: a: 1->1, b: 2->4
+
+Output: 1->1->2->4
+
+SOLUTION:
+
+public ListNode mergeTwoLists(ListNode head1, ListNode head2) 
+    {
+        if(head1 == null)
+        return head2;
+        
+        if(head2 == null)
+        return head1;
+        
+        if(head1.val > head2.val)
+        {
+            ListNode temp = head1;
+            head1 = head2;
+            head2 = temp;
+        }
+        
+        ListNode result = head1;
+        
+        while(head1 != null && head2 != null)
+        {
+            ListNode temp = null;
+            
+            while(head1 != null && head1.val <= head2.val)
+            {
+                temp = head1;
+                head1 = head1.next;
+            }
+            
+            temp.next = head2;
+            
+            ListNode swap = head1;
+            head1 = head2;
+            head2 = swap;
+        }
+        
+        return result;
+    }
+
+Question 7
+
+Given a **Doubly Linked List**, the task is to reverse the given Doubly Linked List.
+
+**Example:**
+
+```
+Original Linked list 10 8 4 2
+Reversed Linked list 2 4 8 10
+``
+
+SOLUTION:
+
+public Node reverseDLL() {
+
+    //this will store our Previous Node which we will used to make prev Node
+    //to make it as Next node of Current Node
+    Node previousNode = null;
+
+    Node current = head;
+
+    while (current != null) {
+      previousNode = current.prev;
+      current.prev = current.next;
+      current.next = previousNode;
+      current = current.prev;
+    }
+    return previousNode;
+  }
+
+Question 8
+
+SOLUTION:
+
+public void deleteNode(int position) {
+        // Check if the list is empty
+        if (head == null) {
+            return;
+        }
+
+        Node currentNode = head;
+        // If deleting the head node
+        if (position == 1) {
+            head = currentNode.next;
+            if (head != null) {
+                head.prev = null;
+            }
+            return;
+        }
+
+        // Traverse to the node at the given position
+        for (int i = 1; currentNode != null && i < position; i++) {
+            currentNode = currentNode.next;
+        }
+
+        // If position is greater than the number of nodes in the list
+        if (currentNode == null) {
+            return;
+        }
+
+        // Adjust the previous and next pointers of the adjacent nodes
+        if (currentNode.prev != null) {
+            currentNode.prev.next = currentNode.next;
+        }
+        if (currentNode.next != null) {
+            currentNode.next.prev = currentNode.prev;
+        }
+    }

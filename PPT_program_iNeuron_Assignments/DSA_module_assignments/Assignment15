@@ -1,0 +1,457 @@
+Question 1
+
+Given an array **arr[ ]** of size **N** having elements, the task is to find the next greater element for each element of the array in order of their appearance in the array.Next greater element of an element in the array is the nearest element on the right which is greater than the current element.If there does not exist next greater of current element, then next greater element for current element is -1. For example, next greater of the last element is always -1.
+
+**Example 1:**
+
+```
+Input:
+N = 4, arr[] = [1 3 2 4]
+Output:
+3 4 4 -1
+Explanation:
+In the array, the next larger element
+to 1 is 3 , 3 is 4 , 2 is 4 and for 4 ?
+since it doesn't exist, it is -1.
+
+```
+
+**Example 2:**
+
+Input:
+N = 5, arr[] [6 8 0 1 3]
+Output:
+8 -1 1 3 -1
+Explanation:
+In the array, the next larger element to
+6 is 8, for 8 there is no larger elements
+hence it is -1, for 0 it is 1 , for 1 it
+is 3 and then for 3 there is no larger
+element on right and hence -1.
+
+SOLUTION:
+
+public int[] nextGreaterElement(int[] findNums, int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>(); // map from x to next greater element of x
+        Stack<Integer> stack = new Stack<>();
+        for (int num : nums) {
+            while (!stack.isEmpty() && stack.peek() < num)
+                map.put(stack.pop(), num);
+            stack.push(num);
+        }   
+        for (int i = 0; i < findNums.length; i++)
+            findNums[i] = map.getOrDefault(findNums[i], -1);
+        return findNums;
+    }
+
+Question 2
+
+Given an array **a** of integers of length **n**, find the nearest smaller number for every element such that the smaller element is on left side.If no small element present on the left print -1.
+
+**Example 1:**
+
+```
+Input: n = 3
+a = {1, 6, 2}
+Output: -1 1 1
+Explaination: There is no number at the
+left of 1. Smaller number than 6 and 2 is 1.
+```
+
+SOLUTION:
+
+public static int[] findNearestSmaller(int[] arr) {
+        int n = arr.length;
+        int[] result = new int[n];
+        Stack<Integer> stack = new Stack<>();
+        
+        // Iterate through the array from left to right
+        for (int i = 0; i < n; i++) {
+            // Pop elements from the stack until a smaller element is found
+            while (!stack.isEmpty() && stack.peek() >= arr[i]) {
+                stack.pop();
+            }
+            
+            if (stack.isEmpty()) {
+                result[i] = -1;  // No smaller element found on the left
+            } else {
+                result[i] = stack.peek();  // Found the nearest smaller element
+            }
+            
+            stack.push(arr[i]);  // Push the current element to the stack
+        }
+        
+        return result;
+    }
+
+Question 3
+
+Implement a Stack using two queues **q1** and **q2**.
+
+**Example 1:**
+
+```
+Input:
+push(2)
+push(3)
+pop()
+push(4)
+pop()
+Output:3 4
+Explanation:
+push(2) the stack will be {2}
+push(3) the stack will be {2 3}
+pop()   poped element will be 3 the
+        stack will be {2}
+push(4) the stack will be {2 4}
+pop()   poped element will be 4
+
+```
+
+SOLUTION:
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class StackUsingQueues<T> {
+    private Queue<T> queue1;
+    private Queue<T> queue2;
+
+    public StackUsingQueues() {
+        queue1 = new LinkedList<>();
+        queue2 = new LinkedList<>();
+    }
+
+    public void push(T element) {
+        // Add the new element to the empty queue
+        if (queue1.isEmpty()) {
+            queue2.offer(element);
+        } else {
+            queue1.offer(element);
+        }
+    }
+
+    public T pop() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+
+        // Move all elements except the last one to the other queue
+        if (queue1.isEmpty()) {
+            while (queue2.size() > 1) {
+                queue1.offer(queue2.poll());
+            }
+            return queue2.poll();
+        } else {
+            while (queue1.size() > 1) {
+                queue2.offer(queue1.poll());
+            }
+            return queue1.poll();
+        }
+    }
+
+    public T peek() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+
+        // Return the last element in the non-empty queue
+        if (queue1.isEmpty()) {
+            return queue2.peek();
+        } else {
+            return queue1.peek();
+        }
+    }
+
+    public boolean isEmpty() {
+        return queue1.isEmpty() && queue2.isEmpty();
+    }
+
+    public int size() {
+        return queue1.size() + queue2.size();
+    }
+
+    public static void main(String[] args) {
+        StackUsingQueues<Integer> stack = new StackUsingQueues<>();
+
+        stack.push(1);
+        stack.push(2);
+        stack.push(3);
+
+        System.out.println("Size: " + stack.size());
+        System.out.println("Top element: " + stack.peek());
+
+        while (!stack.isEmpty()) {
+            System.out.println("Popped element: " + stack.pop());
+        }
+
+        System.out.println("Size: " + stack.size());
+    }
+}
+
+Question 4
+
+You are given a stack **St**. You have to reverse the stack using recursion.
+
+**Example 1:**
+
+```
+Input:St = {3,2,1,7,6}
+Output:{6,7,1,2,3}
+```
+
+SOLUTION:
+
+public static void reverse(Stack<Integer> stack) {
+        if (stack.isEmpty()) {
+            return;
+        }
+
+        int element = stack.pop();
+        reverse(stack);
+        insertAtBottom(stack, element);
+    }
+
+    private static void insertAtBottom(Stack<Integer> stack, int element) {
+        if (stack.isEmpty()) {
+            stack.push(element);
+            return;
+        }
+
+        int top = stack.pop();
+        insertAtBottom(stack, element);
+        stack.push(top);
+    }
+
+Question 5
+
+You are given a string **S**, the task is to reverse the string using stack.
+
+**Example 1:**
+
+Input: S="GeeksforGeeks"
+Output: skeeGrofskeeG
+
+SOLUTION:
+
+public String reverse(String s)
+{
+Stack<Character> stack = new Stack<>();
+
+for(int i=0; i<s.length();i++)
+{
+char ch = s.charAt(i);
+stack.push(ch);
+}
+
+String ans = "";
+
+while(!stack.isEmpty())
+ans += stack.pop();
+
+return ans;
+}
+
+Question 6
+
+Given string **S** representing a postfix expression, the task is to evaluate the expression and find the final value. Operators will only include the basic arithmetic operators like ***, /, + and -**.
+
+**Example 1:**
+
+```
+Input: S = "231*+9-"
+Output: -4
+Explanation:
+After solving the given expression,
+we have -4 as result.
+
+```
+
+SOLUTION:
+
+public int evaluatePostfix(String exp)
+    {
+        Stack<Integer> stack = new Stack<>();
+ 
+        for (int i = 0; i < exp.length(); i++) {
+            char c = exp.charAt(i);
+ 
+            // If the scanned character is an operand
+            // (number here), push it to the stack.
+            if (Character.isDigit(c))
+                stack.push(c - '0');
+ 
+            //  If the scanned character is an operator, pop
+            //  two elements from stack apply the operator
+            else {
+                int val1 = stack.pop();
+                int val2 = stack.pop();
+ 
+                switch (c) {
+                case '+':
+                    stack.push(val2 + val1);
+                    break;
+                case '-':
+                    stack.push(val2 - val1);
+                    break;
+                case '/':
+                    stack.push(val2 / val1);
+                    break;
+                case '*':
+                    stack.push(val2 * val1);
+                    break;
+                }
+            }
+        }
+        return stack.pop();
+    }
+
+Question 7
+
+Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.
+
+Implement the `MinStack` class:
+
+- `MinStack()` initializes the stack object.
+- `void push(int val)` pushes the element `val` onto the stack.
+- `void pop()` removes the element on the top of the stack.
+- `int top()` gets the top element of the stack.
+- `int getMin()` retrieves the minimum element in the stack.
+
+You must implement a solution with `O(1)` time complexity for each function.
+
+**Example 1:**
+
+Input
+["MinStack","push","push","push","getMin","pop","top","getMin"]
+[[],[-2],[0],[-3],[],[],[],[]]
+
+Output
+[null,null,null,null,-3,null,0,-2]
+
+Explanation
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin(); // return -3
+minStack.pop();
+minStack.top();    // return 0
+minStack.getMin(); // return -2
+
+SOLUTION:
+
+private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+
+    public MinStack() {
+        stack = new Stack<>();
+        minStack = new Stack<>();
+    }
+
+    public void push(int val) {
+        stack.push(val);
+
+        if (minStack.isEmpty() || val <= minStack.peek()) {
+            minStack.push(val);
+        }
+    }
+
+    public void pop() {
+        if (stack.isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+
+        int poppedElement = stack.pop();
+
+        if (poppedElement == minStack.peek()) {
+            minStack.pop();
+        }
+    }
+
+    public int top() {
+        if (stack.isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+
+        return stack.peek();
+    }
+
+    public int getMin() {
+        if (minStack.isEmpty()) {
+            throw new IllegalStateException("Stack is empty");
+        }
+
+        return minStack.peek();
+    }
+
+Question 8
+
+Given `n` non-negative integers representing an elevation map where the width of each bar is `1`, compute how much water it can trap after raining.
+
+**Example 1:**
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+
+SOLUTION:
+
+class Solution {
+    public int trap(int[] height) 
+    { 
+        // Using O(n) space
+        /*
+        int n = height.length;
+        
+        int[] left = new int[n];
+        int[] right = new int[n];
+        
+        left[0] = height[0];
+        
+        for(int i=1; i<n; i++)
+            left[i] = Math.max(height[i], left[i-1]);
+        
+        right[n-1] = height[n-1];
+        
+        for(int i = n-2; i>=0; i--)
+            right[i] = Math.max(height[i] , right[i+1]);
+        
+        int result =0;
+        
+        for(int i=0; i<n; i++)
+            result = result + Math.min(left[i],right[i]) - height[i];
+        
+        return result;
+        */
+        
+        // using O(1) space by 2 pointer approach
+        
+        if (height.length==0)
+            return 0; 
+        int left = 0, right = height.length-1; 
+        int leftMax=0, rightMax=0; 
+        int ans = 0; 
+        
+        while (left < right)
+         {
+            if (height[left] > leftMax) 
+                leftMax = height[left]; 
+            
+            if (height[right] > rightMax) 
+                rightMax = height[right];
+            
+            if (leftMax < rightMax) 
+            {
+                ans += Math.max(0, leftMax-height[left]); 
+                left++; 
+            }
+            else 
+            {
+                ans += Math.max(0, rightMax-height[right]); 
+                right--; 
+            }
+        }
+        return ans; 
+    }
+}

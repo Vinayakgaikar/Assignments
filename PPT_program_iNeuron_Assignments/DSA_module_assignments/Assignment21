@@ -1,0 +1,362 @@
+Question 1
+
+You are given a binary tree. The binary tree is represented using the TreeNode class. Each TreeNode has an integer value and left and right children, represented using the TreeNode class itself. Convert this binary tree into a binary search tree.
+
+Input:
+
+        10
+
+       /   \
+
+     2      7
+
+   /   \
+
+ 8      4
+
+Output:
+
+        8
+
+      /   \
+
+    4     10
+
+  /   \
+
+2      7
+
+SOLUTION:
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Solution {
+    public TreeNode convertToBST(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        List<Integer> nodeList = new ArrayList<>();
+        inorderTraversal(root, nodeList);
+        Collections.sort(nodeList);
+
+        return buildBST(nodeList, 0, nodeList.size() - 1);
+    }
+
+    private void inorderTraversal(TreeNode node, List<Integer> nodeList) {
+        if (node == null) {
+            return;
+        }
+
+        inorderTraversal(node.left, nodeList);
+        nodeList.add(node.val);
+        inorderTraversal(node.right, nodeList);
+    }
+
+    private TreeNode buildBST(List<Integer> nodeList, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+
+        int mid = start + (end - start) / 2;
+        TreeNode root = new TreeNode(nodeList.get(mid));
+        root.left = buildBST(nodeList, start, mid - 1);
+        root.right = buildBST(nodeList, mid + 1, end);
+
+        return root;
+    }
+}
+
+Question 2
+
+Given a Binary Search Tree with all unique values and two keys. Find the distance between two nodes in BST. The given keys always exist in BST.
+
+Example:
+
+Consider the following BST:
+
+**Input-1:**
+
+n = 9
+
+values = [8, 3, 1, 6, 4, 7, 10, 14,13]
+
+node-1 = 6
+
+node-2 = 14
+
+**Output-1:**
+
+The distance between the two keys = 4
+
+**Input-2:**
+
+n = 9
+
+values = [8, 3, 1, 6, 4, 7, 10, 14,13]
+
+node-1 = 3
+
+node-2 = 4
+
+**Output-2:**
+
+The distance between the two keys = 2
+
+SOLUTION:
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Solution {
+    public int findDistance(TreeNode root, int node1, int node2) {
+        TreeNode lca = findLCA(root, node1, node2);
+        int dist1 = findDistanceFromNode(lca, node1, 0);
+        int dist2 = findDistanceFromNode(lca, node2, 0);
+        return dist1 + dist2;
+    }
+
+    private TreeNode findLCA(TreeNode root, int node1, int node2) {
+        if (root == null || root.val == node1 || root.val == node2) {
+            return root;
+        }
+
+        if (root.val < node1 && root.val < node2) {
+            return findLCA(root.right, node1, node2);
+        }
+
+        if (root.val > node1 && root.val > node2) {
+            return findLCA(root.left, node1, node2);
+        }
+
+        return root;
+    }
+
+    private int findDistanceFromNode(TreeNode root, int target, int distance) {
+        if (root == null) {
+            return -1;
+        }
+
+        if (root.val == target) {
+            return distance;
+        }
+
+        if (root.val < target) {
+            return findDistanceFromNode(root.right, target, distance + 1);
+        }
+
+        return findDistanceFromNode(root.left, target, distance + 1);
+    }
+}
+
+Question 3
+
+Write a program to convert a binary tree to a doubly linked list.
+
+Input:
+
+        10
+
+       /   \
+
+     5     20
+
+           /   \
+
+        30     35
+
+Output:
+
+5 10 30 20 35
+
+SOLUTION:
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+class DoublyLinkedListNode {
+    int val;
+    DoublyLinkedListNode prev;
+    DoublyLinkedListNode next;
+
+    DoublyLinkedListNode(int val) {
+        this.val = val;
+        this.prev = null;
+        this.next = null;
+    }
+}
+
+public class BinaryTreeToDoublyLinkedList {
+    TreeNode root;
+    DoublyLinkedListNode head;
+    DoublyLinkedListNode tail;
+
+    public DoublyLinkedListNode convertToDoublyLinkedList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+
+        convertToDoublyLinkedListHelper(root);
+
+        return head;
+    }
+
+    private void convertToDoublyLinkedListHelper(TreeNode node) {
+        if (node == null) {
+            return;
+        }
+
+        // Recursively convert the left subtree
+        convertToDoublyLinkedListHelper(node.left);
+
+        // Create a new doubly linked list node
+        DoublyLinkedListNode newNode = new DoublyLinkedListNode(node.val);
+
+        if (head == null) {
+            // If this is the first node, set it as the head
+            head = newNode;
+            tail = newNode;
+        } else {
+            // Append the new node to the tail
+            tail.next = newNode;
+            newNode.prev = tail;
+            tail = newNode;
+        }
+
+        // Recursively convert the right subtree
+        convertToDoublyLinkedListHelper(node.right);
+    }
+}
+
+Question 4
+
+Write a program to connect nodes at the same level.
+
+Input:
+
+        1
+
+      /   \
+
+    2      3
+
+  /   \   /   \
+
+4     5 6    7
+
+Output:
+
+1 → -1
+
+2 → 3
+
+3 → -1
+
+4 → 5
+
+5 → 6
+
+6 → 7
+
+7 → -1
+
+SOLUTION:
+
+class Node {
+    int val;
+    Node left;
+    Node right;
+    Node nextRight;
+
+    Node(int val) {
+        this.val = val;
+        this.left = null;
+        this.right = null;
+        this.nextRight = null;
+    }
+}
+
+public class ConnectNodesAtSameLevel {
+    Node root;
+
+    public void connectNodes(Node root) {
+        if (root == null) {
+            return;
+        }
+
+        root.nextRight = null;
+        connectNodesHelper(root);
+    }
+
+    private void connectNodesHelper(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        // Set the nextRight pointer of the left child
+        if (node.left != null) {
+            if (node.right != null) {
+                node.left.nextRight = node.right;
+            } else {
+                node.left.nextRight = getNextRight(node);
+            }
+        }
+
+        // Set the nextRight pointer of the right child
+        if (node.right != null) {
+            node.right.nextRight = getNextRight(node);
+        }
+
+        // Recursively connect the right subtree first
+        connectNodesHelper(node.right);
+
+        // Recursively connect the left subtree
+        connectNodesHelper(node.left);
+    }
+
+    private Node getNextRight(Node node) {
+        Node temp = node.nextRight;
+
+        // Traverse the nextRight pointers until a node with a non-null child is found
+        while (temp != null) {
+            if (temp.left != null) {
+                return temp.left;
+            }
+            if (temp.right != null) {
+                return temp.right;
+            }
+            temp = temp.nextRight;
+        }
+
+        return null;
+    }
+
+
